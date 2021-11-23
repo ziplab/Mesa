@@ -7,7 +7,7 @@ By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en
 
 
 <center>
-<img src=".github/performance.png" alt="image-20211116105242785" style="zoom:50%;" />
+<img src=".github/performance.png" alt="image-20211116105242785" style="zoom:30%;" />
 </center>
 
 ## Installation
