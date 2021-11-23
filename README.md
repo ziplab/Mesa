@@ -79,7 +79,7 @@ By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en
     attn = self.softmax(attn)
     ```
 
- 3. Alternatively, you can only compress one layer:
+ 3. You can also target one layer by:
 
     ```python
     import mesa as ms
