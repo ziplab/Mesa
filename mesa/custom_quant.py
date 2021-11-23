@@ -16,6 +16,9 @@ else:
     from .cpp_extension import quantization as ext_quant
 
 def pack_group(x, groups):
+    '''
+    Reshaping activations for quantization
+    '''
     input_shape = x.shape
     if len(input_shape) == 3:
         B, N, C = input_shape
@@ -34,6 +37,9 @@ def pack_group(x, groups):
     return x.contiguous()
 
 def depack_group(x, groups, input_shape):
+    '''
+    Reshaping activations to their original shape
+    '''
     if len(input_shape) == 3:
         B, N, C = input_shape
         x = x.reshape(groups, B, N, C // groups).permute(1, 2, 0, 3).reshape(B, N, C)
@@ -51,6 +57,9 @@ def depack_group(x, groups, input_shape):
 
 
 def update_clip_val_shift(input, clip_val, shift, iteration, ema_decay, level):
+    '''
+    Update quantization parameters: clip_val and shift. 
+    '''
     max_value = torch.amax(input, 1)
     min_value = torch.amin(input, 1)
     clip_range = max_value - min_value
@@ -64,25 +73,34 @@ def update_clip_val_shift(input, clip_val, shift, iteration, ema_decay, level):
 
 
 class Quant(object):
-    def __init__(self, mesa=False, args=None, logger=None, enable=False, tag='fm', quant_groups=1):
+    def __init__(self, args=None, logger=None, enable=False, tag='fm', quant_groups=1):
         assert isinstance(self, nn.Module)
         if type(quant_groups) is tuple:
             quant_groups = quant_groups[0]
-        self.enable = mesa or enable
-        # quantizer
+        # True for memory-saving training, False for standard training.
+        self.enable = enable
+        # The number of training iterations
         self.iteration = nn.Parameter(torch.zeros(1), requires_grad=False)
+        # The number of quantization groups for bucketing the activations at a layer
         self.quant_groups = quant_groups
-        self.clip_val = nn.Parameter(torch.Tensor([1.0] * quant_groups))
+        # 256 for 8-bit quantization
         self.level = 256
+        # Indicating the type of this layer, e.g. fc, conv, gelu, bn, relu, softmax, matmul, layernorm
         self.tag = tag
+        # Layer index
         self.index = -1
+        # The lambda in the paper
+        self.ema_decay = 0.9
+        # The alpha in the paper
+        self.clip_val = nn.Parameter(torch.Tensor([1.0] * quant_groups)) 
+         # The beta in the paper
+        self.shift = nn.Parameter(torch.Tensor([0.] * quant_groups))
+
         self.args = args
         self.string = 'ms.'
         self.repr = super(type(self), self).__repr__()
         self.logger = logger
-        self.ema_decay = 0.9
         self.requires_grad = False
-        self.shift = nn.Parameter(torch.Tensor([0.] * quant_groups))
 
         class logger_wrapper(object):
             def info(self, string):
@@ -122,6 +140,9 @@ class Quant(object):
         self.shift.requires_grad = False
 
     def __str__(self):
+        '''
+        For logging
+        '''
         if hasattr(self, 'repr'):
             string = self.repr
         if hasattr(self, 'string'):
@@ -145,6 +166,9 @@ class Quant(object):
         return string
 
     def update_quantization_parameter(self, **parameters):
+        '''
+        Setup compressed layers before training according to the custom policy.
+        '''
         feedback = dict()
         index = self.index
         if 'index' in parameters:
@@ -247,11 +271,14 @@ class Quant(object):
 
     @staticmethod
     def forward(ctx, x, clip_val, level, iteration, ema_decay, quant_groups, shift, identifier="_"):
-
+        '''
+        Quantizing activations at the forward pass during training.
+        '''
         input_shape = x.shape
         x = pack_group(x, quant_groups)
         quant_shape = x.shape
 
+        # update quantization parameters
         update_clip_val_shift(x.detach(), clip_val, shift, iteration, ema_decay, level)
 
         setattr(ctx, 'clip_val{}'.format(identifier), clip_val)
@@ -259,6 +286,7 @@ class Quant(object):
         setattr(ctx, 'input_type{}'.format(identifier), x.dtype)
         setattr(ctx, 'input_shape{}'.format(identifier), input_shape)
 
+        # quantize
         scale = ((level - 1) / clip_val.abs()).to(dtype=x.dtype)
         shift = shift.to(dtype=x.dtype)
         x = ext_quant.pack_single_precision(x, scale, shift, 8, True)
@@ -269,7 +297,9 @@ class Quant(object):
     
     @staticmethod
     def restore(ctx, identifier="_"):
-
+        '''
+        Dequantizing activations at the backward pass during training.
+        '''
         input = getattr(ctx, 'input{}'.format(identifier))
         level = getattr(ctx, 'level{}'.format(identifier))
         input_shape = getattr(ctx, 'input_shape{}'.format(identifier))
@@ -278,6 +308,7 @@ class Quant(object):
         quant_shape = getattr(ctx, 'quant_shape{}'.format(identifier))
         input_type = getattr(ctx, 'input_type{}'.format(identifier))
 
+        # dequantize
         scale = ((level - 1) / clip_val.abs()).to(dtype=input_type)
         shift = shift.to(dtype=input_type)
         y = ext_quant.unpack_single_precision(input, 8, scale, shift, quant_shape[0], quant_shape[1])
@@ -298,9 +329,9 @@ class Quant(object):
         assert 1 == 0, 'Not Support'
 
 class quantization(nn.Module, Quant):
-    def __init__(self, mesa=False, args=None, logger=None, tag='fm', quant_groups=None):
+    def __init__(self, args=None, logger=None, tag='fm', quant_groups=None):
         super(quantization, self).__init__()
-        Quant.__init__(self, mesa=mesa, args=args, logger=logger, tag=tag, quant_groups=quant_groups)
+        Quant.__init__(self, args=args, logger=logger, tag=tag, quant_groups=quant_groups)
 
     def __repr__(self):
         return self.__str__()

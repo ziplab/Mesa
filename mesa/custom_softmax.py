@@ -36,7 +36,7 @@ class softmax(torch.autograd.Function):
         return grad_input, None, None, None, None, None, None, None, None, None, None, None, None, None
 
 class Softmax(nn.Softmax):
-    def __init__(self, dim=None, mesa=False, args=None, logger=None, quant_groups=1):
+    def __init__(self, dim=None, args=None, logger=None, quant_groups=1):
         super(Softmax, self).__init__(dim=dim)
         self.quant1 = custom_quant.quantization(tag='softmax-1', quant_groups=quant_groups)
         self.quant2 = custom_quant.quantization(tag='softmax-2', quant_groups=quant_groups)

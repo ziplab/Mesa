@@ -40,10 +40,9 @@ class linear(torch.autograd.Function):
         return grad_input, grad_weight, grad_bias, None, None, None, None, None, None
 
 class Linear(nn.Linear, custom_quant.Quant):
-    def __init__(self, in_features, out_features, bias=True,
-            mesa=False, args=None, logger=None, quant_groups=1):
+    def __init__(self, in_features, out_features, bias=True, args=None, logger=None, quant_groups=1):
         super(Linear, self).__init__(in_features, out_features, bias=bias)
-        custom_quant.Quant.__init__(self, mesa=mesa, args=args, logger=logger, quant_groups=quant_groups)
+        custom_quant.Quant.__init__(self, args=args, logger=logger, quant_groups=quant_groups)
         self.tag = 'fc'
 
     def __repr__(self):

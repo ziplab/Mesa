@@ -58,13 +58,10 @@ class conv2d_uniform(torch.autograd.Function):
 
 
 class Conv2d(nn.Conv2d, custom_quant.Quant):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, mesa=False, args=None, logger=None, quant_groups=1):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, args=None, logger=None, quant_groups=1):
         super(Conv2d, self).__init__(in_channels, out_channels, kernel_size, stride=stride, padding=padding, dilation=dilation, groups=groups, bias=bias)
-        custom_quant.Quant.__init__(self, mesa=mesa, args=args, logger=logger, quant_groups=quant_groups)
+        custom_quant.Quant.__init__(self, args=args, logger=logger, quant_groups=quant_groups)
         self.tag = 'conv'
-        # constraints
-        if self.padding_mode != 'zeros':
-            raise NotImplementedError
 
     def __repr__(self):
         return self.__str__()

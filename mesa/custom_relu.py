@@ -45,7 +45,7 @@ class relu(torch.autograd.Function):
         return grad_input, None, None, None, None
 
 class ReLU(nn.ReLU, custom_quant.Quant):
-    def __init__(self, inplace=False, dim=1, mesa=False, args=None, logger=None):
+    def __init__(self, inplace=False, dim=1, args=None, logger=None):
         super(ReLU, self).__init__(inplace)
         self.repr = super(ReLU, self).__repr__()
         custom_quant.Quant.__init__(self, args=args, logger=logger)

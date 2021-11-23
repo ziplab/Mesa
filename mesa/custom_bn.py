@@ -152,12 +152,12 @@ class batchnorm2d(torch.autograd.Function):
     def forward(ctx, input, weight, bias, mean, var, average_factor, training, need_sync, process_group, world_size, eps,
                 clip_val, level, iteration, ema_decay, quant_groups, shift):
         if need_sync:
+            # currently not support
             output = SyncBatchNorm_forward(ctx, input, bn_weight, bn_bias, bn_mean, bn_var, bn_eps, average_factor, process_group, world_size)
         else:
             output, save_mean, save_var, reverse = native.batch_norm_forward(input, weight, bias, mean, var, training, average_factor, eps)
             if training:
                 ctx.bn_parameter = (weight, bias, mean, var, save_mean, save_var, reverse, eps)
-                # ctx.bn_input = input
                 custom_quant.Quant.forward(ctx, input, clip_val, level, iteration, ema_decay, quant_groups, shift)
         if training:
             ctx.need_sync = need_sync
@@ -165,7 +165,6 @@ class batchnorm2d(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, grad_output):
-        # pydevd.settrace(suspend=False, trace_only_current_thread=True)
         if ctx.need_sync:
             grad_output, grad_bn_weight, grad_bn_bias = SyncBatchNorm_backward(input, bn_weight, bn_mean, bn_invstd, bn_count_all, \
                     bn_process_group, ctx.needs_input_grad[7:9], grad_output)

@@ -38,7 +38,7 @@ class matmul(torch.autograd.Function):
         return grad_input1, grad_input2, None, None, None, None, None, None, None, None, None, None, None, None
 
 class MatMul(nn.Module):
-    def __init__(self, mesa=False, args=None, logger=None, quant_groups=1):
+    def __init__(self, args=None, logger=None, quant_groups=1):
         super(MatMul, self).__init__()
         self.quant1 = custom_quant.quantization(tag='matmul-1', quant_groups=quant_groups)
         self.quant2 = custom_quant.quantization(tag='matmul-2', quant_groups=quant_groups)

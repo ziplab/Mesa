@@ -30,9 +30,9 @@ class gelu(torch.autograd.Function):
         return grad_input, None, None, None, None, None, None
 
 class GELU(nn.GELU, custom_quant.Quant):
-    def __init__(self, mesa=False, args=None, logger=None, quant_groups=1):
+    def __init__(self, args=None, logger=None, quant_groups=1):
         super(GELU, self).__init__()
-        custom_quant.Quant.__init__(self, mesa=mesa, args=args, logger=logger, quant_groups=quant_groups)
+        custom_quant.Quant.__init__(self, args=args, logger=logger, quant_groups=quant_groups)
         self.tag = 'gelu'
 
     def __repr__(self):

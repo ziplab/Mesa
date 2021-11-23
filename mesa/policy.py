@@ -153,8 +153,8 @@ def convert_by_group_size(module, hidden_group_size):
                               ms.BatchNorm2d)):
             continue
         
-        # Note: For GELU, Softmax and ReLU, you need to mannully set the number of 
-        # quantization groups as we cannot get the hidden dimensions from these layers.
+        # Note: For GELU, Softmax and ReLU, you need to manually set the number of 
+        # quantization groups as we cannot get the number of hidden dimensions from these layers.
         if isinstance(child, nn.Linear):
             setattr(module, name, ms.Linear(child.in_features, child.out_features, bias=child.bias is not None, quant_groups=child.in_features//hidden_group_size))
         elif isinstance(child, nn.Conv2d):
