@@ -1,5 +1,6 @@
 # Mesa: A Memory-saving Training Framework for Transformers
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This is the official PyTorch implementation for [Mesa: A Memory-saving Training Framework for Transformers](https://arxiv.org/abs/2111.11124).
 
@@ -115,7 +116,7 @@ We provide demo projects to replicate our results of training DeiT and Swin with
 
 ## License
 
-This repository is released under the Apache 2.0 license as found in the LICENSE file.
+This repository is released under the Apache 2.0 license as found in the [LICENSE](https://github.com/zhuang-group/Mesa/blob/main/LICENSE) file.
 
 
 ## Acknowledgments
