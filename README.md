@@ -1,5 +1,5 @@
 <center>
-<img src=".github/mesa_banner.jpg" alt="image-20211116105242785" style="zoom:100%;" />
+<img src=".github/mesa_banner.jpg"style="zoom:100%;" />
 </center>
 
 
@@ -11,6 +11,10 @@ This is the official PyTorch implementation for [Mesa: A Memory-saving Training 
 
 By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en), [Peng Chen](https://scholar.google.com/citations?user=Hoh9p_kAAAAJ&hl=en), [Haoyu He](https://scholar.google.com/citations?user=aU1zMhUAAAAJ&hl=en), [Jing Liu](https://sites.google.com/view/jing-liu/首页), [Jianfei Cai](https://scholar.google.com/citations?user=N6czCoUAAAAJ&hl=en) and  [Bohan Zhuang](https://sites.google.com/view/bohanzhuang).
 
+
+<center>
+<img src=".github/framework.jpg" style="zoom:100%;" />
+</center>
 
 ## Installation
 
