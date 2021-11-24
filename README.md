@@ -13,7 +13,7 @@ By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en
 
 
 <center>
-<img src=".github/framework.jpg" style="zoom:100%;" />
+<img src=".github/framework_v1.jpg" style="zoom:100%;" />
 </center>
 
 ## Installation
