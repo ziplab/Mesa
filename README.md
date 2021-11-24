@@ -99,8 +99,7 @@ We provide demo projects to replicate our results of training DeiT and Swin with
 
 ## Results on ImageNet
 
-
-| Model               | Param (M) | FLOPs (G) | Train Memory | Top-1 (%) |
+| Model               | Param (M) | FLOPs (G) | Train Memory (MB) | Top-1 (%) |
 | ------------------- | --------- | --------- | ------------ | --------- |
 | DeiT-Ti             | 5         | 1.3       | 4,171         | 71.9      |
 | **DeiT-Ti w/ Mesa** | 5         | 1.3       | **1,858**     | **72.1**  |
@@ -112,6 +111,8 @@ We provide demo projects to replicate our results of training DeiT and Swin with
 | **Swin-Ti w/ Mesa** | 29        | 4.5       | **5,371**     | **81.3**  |
 | PVT-Ti              | 13        | 1.9       | 7,800         | 75.1      |
 | **PVT-Ti w/ Mesa**  | 13        | 1.9       | **3,782**     | 74.9      |
+
+> Memory footprint at training time is measured with a batch size of 128 and an image resolution of 224x224 on a single GPU.
 
 
 ## License
