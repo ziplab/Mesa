@@ -34,7 +34,7 @@ By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en
 2.  Build and install Mesa.
 
        ```bash
-       # cloen this repo
+       # clone this repo
        git clone https://github.com/zhuang-group/Mesa
        # build
        cd Mesa/
@@ -72,6 +72,7 @@ By [Zizheng Pan](https://scholar.google.com.au/citations?user=w_VMopoAAAAJ&hl=en
     Note that `convert_by_num_groups` and `convert_by_group_size` only recognize `nn.XXX`, if your code has functional operations, such as `Q@K` and `F.Softmax`, you may need to manually setup these layers.  For example:
 
     ```python
+    import mesa as ms
     # matrix multipcation (before)
     out = Q@K.transpose(-2, -1)
     # with Mesa
