@@ -119,6 +119,18 @@ We provide demo projects to replicate our results of training DeiT and Swin with
 > Memory footprint at training time is measured with a batch size of 128 and an image resolution of 224x224 on a single GPU.
 
 
+## Citation
+If you find our work interesting or helpful to your research, please consider citing Mesa.
+
+```
+@article{pan2021mesa,
+      title={Mesa: A Memory-saving Training Framework for Transformers}, 
+      author={Zizheng Pan and Peng Chen and Haoyu He and Jing Liu and Jianfei Cai and Bohan Zhuang},
+      journal={arXiv preprint arXiv:2111.11124}
+      year={2021}
+}
+```
+
 ## License
 
 This repository is released under the Apache 2.0 license as found in the [LICENSE](https://github.com/zhuang-group/Mesa/blob/main/LICENSE) file.
