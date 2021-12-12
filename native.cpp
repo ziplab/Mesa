@@ -89,13 +89,22 @@ std::tuple<at::Tensor, at::Tensor, at::Tensor> batch_norm_backward(
 at::Tensor gelu_backward_cpu(
     const at::Tensor& grad_output,
     const at::Tensor& input) {
+#if TORCH_VERSION_MAJOR >= 1 && TORCH_VERSION_MINOR >= 10
+    return at::gelu_backward(grad_output, input);
+#else
     return at::native::gelu_backward_cpu(grad_output, input);
+#endif
 }
+
 
 at::Tensor gelu_backward_cuda(
     const at::Tensor& grad_output,
     const at::Tensor& input) {
+#if TORCH_VERSION_MAJOR >= 1 && TORCH_VERSION_MINOR >= 10
+    return at::gelu_backward(grad_output, input);
+#else
     return at::native::gelu_backward_cuda(grad_output, input);
+#endif
 }
 
 std::tuple<at::Tensor, at::Tensor, at::Tensor> layer_norm_forward_cpu(
@@ -187,7 +196,11 @@ at::Tensor softmax_backward_cpu(
     const at::Tensor& output,
     int64_t dim,
     const at::Tensor& self) {
+#if TORCH_VERSION_MAJOR >= 1 && TORCH_VERSION_MINOR >= 10
+    return at::_softmax_backward_data(grad_output, output, dim, self);
+#else
     return at::native::softmax_backward_cpu(grad_output, output, dim, self);
+#endif
 }
 
 at::Tensor softmax_backward_cuda(
@@ -195,8 +208,13 @@ at::Tensor softmax_backward_cuda(
     const at::Tensor& output,
     int64_t dim,
     const at::Tensor& self) {
+#if TORCH_VERSION_MAJOR >= 1 && TORCH_VERSION_MINOR >= 10
+    return at::_softmax_backward_data(grad_output, output, dim, self);
+#else
     return at::native::softmax_backward_cuda(grad_output, output, dim, self);
+#endif
 }
+
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("conv2d_backward", &conv2d_backward, "2d convolution backward");
